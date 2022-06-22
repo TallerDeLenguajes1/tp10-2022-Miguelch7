@@ -1,32 +1,19 @@
 ﻿using System.Net;
 using System.Text.Json;
 
-// Se obtienen las civilizaciones
-Root listadoCivilizaciones = obtenerCivilizaciones();
+// Genera un numero random y lo 
+var numRandom = new Random().Next(1, 140);
+Technology technology = getTechnologyById(numRandom);
 
-listadoCivilizaciones.listarTodas();
-
-// Se cuentan los resultados
-Console.WriteLine($"\nSe han encontrado { listadoCivilizaciones.obtenerCantidad() } civilizaciones");
-
-Console.Write("\nElija una civilizacion (por su id) para mostrar su contenido: ");
-int idCivilizacion = Convert.ToInt32(Console.ReadLine());
-
-
-Civilization civilizacionEncontrada = listadoCivilizaciones.Civilizations[idCivilizacion - 1];
-
-if (civilizacionEncontrada != null)
-{
-  Console.WriteLine($"\nDetalle de la civilización cuyo id es { idCivilizacion }: ");
-  civilizacionEncontrada.mostrarCivilizacion();
-}
+// Mostrar technology
+technology.showTechnology();
 
 // ----- Funciones -----
-Root obtenerCivilizaciones()
+Technology getTechnologyById(int id)
 {
-  Root listadoCivilizaciones = new Root();
+  Technology technology = new Technology();
 
-  var url = "https://age-of-empires-2-api.herokuapp.com/api/v1/civilizations";
+  var url = $"https://age-of-empires-2-api.herokuapp.com/api/v1/technology/{ id }";
 
   var request = (HttpWebRequest)WebRequest.Create(url);
   request.Method = "GET";
@@ -49,7 +36,7 @@ Root obtenerCivilizaciones()
 
             string responseBody = objReader.ReadToEnd();
 
-            listadoCivilizaciones = JsonSerializer.Deserialize<Root>(responseBody);
+            technology = JsonSerializer.Deserialize<Technology>(responseBody);
           }
         }
       }
@@ -59,6 +46,6 @@ Root obtenerCivilizaciones()
   {
     Console.WriteLine("Ocurrió un error");
   }
-
-  return listadoCivilizaciones;
+  
+  return technology;
 }
